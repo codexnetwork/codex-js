@@ -1,0 +1,50 @@
+{
+  "vote": {
+    "base": "",
+    "test_code": {},
+    "action": {
+      "name": "vote",
+      "account": "eosio"
+    },
+    "fields": {
+      "voter": "account_name",
+      "bpname": "account_name",
+      "stake": "asset"
+    }
+  },
+  "unfreeze": {
+    "base": "",
+    "action": {
+      "name": "unfreeze",
+      "account": "eosio"
+    },
+    "fields": {
+      "voter": "account_name",
+      "bpname": "account_name"
+    }
+  },
+  "claim": {
+    "base": "",
+    "action": {
+      "name": "claim",
+      "account": "eosio"
+    },
+    "fields": {
+      "voter": "account_name",
+      "bpname": "account_name"
+    }
+  },
+  "transfer": {
+    "base": "",
+    "action": {
+      "name": "transfer",
+      "account": "eosio.token"
+    },
+    "fields": {
+      "from": "account_name",
+      "to": "account_name",
+      "quantity": "asset",
+      "memo": "string"
+    }
+  }
+}
