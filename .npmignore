@@ -1,0 +1,12 @@
+npm-debug.log
+coverage
+sandbox
+docs
+src
+test_case
+.nyc_output
+docker
+dist
+bin
+dev
+.travis.yml
