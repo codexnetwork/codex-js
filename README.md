@@ -2,13 +2,13 @@
 
 # 安装 cdxjs
 ```javascript
-    npm install cdxjs
+npm install cdxjs
     //or
-    yarn add cdxjs
+yarn add cdxjs
 ```
 # 使用
 ```javascript
-    import Codex from 'cdxjs'
+import Codex from 'cdxjs'
 ```
 ## 
 # 全局配置
@@ -20,10 +20,10 @@
 
 使用示例:
 ```javascript
-    const node_config = {
-      httpEndpoint: node_url,
-      chainId
-    }
+const node_config = {
+  httpEndpoint: node_url,
+  chainId
+}
 ```
 # getAbi
 
@@ -35,14 +35,11 @@
 
 使用示例:
 ```javascript
-    Codex({
-        httpEndpoint
-    })
-    .getAbi('codex')
-    .then(abi_data => {
-      console.log(abi_data);
-      console.log(abi_data.actions); //所有ABI的可执行的方法
-    });
+const test_get_abi = async () => {
+  let abi_content = await Codex({httpEndpoint}).getAbi('codex');
+  console.log(abi_content.abi.actions);
+}
+test_get_abi();
 ```
 # getInfo
 
@@ -50,16 +47,18 @@
 
 参数:
 
-    {}
+```javascript
+  {}
+```
 
 使用示例:
 
 ```javascript
-    const test_get_info = async () => {
-      let info = await Codex(node_config).getInfo({}); //api getInfo, {}为必传参数
-      console.log(`node info is ${JSON.stringify(info)}`);
-    }
-    test_get_info();
+const test_get_info = async () => {
+  let info = await Codex(node_config).getInfo({}); //api getInfo, {}为必传参数
+  console.log(`node info is ${JSON.stringify(info)}`);
+}
+test_get_info();
 ```
 
 # getBblock
@@ -92,11 +91,11 @@
 使用示例:
 
 ```javascript
-    const test_get_account = async (account_name = 'codex') => {
-      let info = await Codex(node_config).getAccount(account_name); 
-      console.log(`account info is ${JSON.stringify(info)}`);
-    }
-    test_get_account();
+const test_get_account = async (account_name = 'codex') => {
+  let info = await Codex(node_config).getAccount(account_name); 
+  console.log(`account info is ${JSON.stringify(info)}`);
+}
+test_get_account();
 ```
 
 
@@ -117,31 +116,31 @@
 参数:
 
 ```javascript
-     { 
-        scope: account_name, //查询条件
-        code: 'codex.token', //合约账户
-        table: 'accounts', //表名
-        limit: 10000,
-        json: true,
-      }
+  { 
+    scope: account_name, //查询条件
+    code: 'codex.token', //合约账户
+    table: 'accounts', //表名
+    limit: 10000,
+    json: true,
+  }
 ```
 
 
-使用示例:
+代码:
 
 ```javascript
-    const test_get_available = async (account_name = 'testc') => {
-      let params = { 
-        scope: account_name, //查询条件
-        code: 'codex.token', //合约账户
-        table: 'accounts', //表名
-        limit: 10000,
-        json: true,
-      }
-      let account_info = await Codex(node_config).getTableRows(params); // api getTableRows
-      console.log(account_info)
-    }
-    test_get_available();
+const test_get_available = async (account_name = 'testc') => {
+  let params = { 
+    scope: account_name, //查询条件
+    code: 'codex.token', //合约账户
+    table: 'accounts', //表名
+    limit: 10000,
+    json: true,
+  }
+  let account_info = await Codex(node_config).getTableRows(params); // api getTableRows
+  console.log(account_info)
+}
+test_get_available();
 ```
 
 
@@ -150,56 +149,57 @@
 参数:
 
 ```javascript
-    {
+  {
+    scope: 'codex',
+    code: 'codex',
+    table: 'bps',
+    json: true,
+    limit: 1000 
+  }
+```
+
+使用:
+```javascript
+const test_get_bps_table = async (account_name = 'testc') => {
+  let params = {
       scope: 'codex',
       code: 'codex',
       table: 'bps',
       json: true,
       limit: 1000 
-    }
-```
-
-使用示例:
-```javascript
-    const test_get_bps_table = async (account_name = 'testc') => {
-      let params = {
-          scope: 'codex',
-          code: 'codex',
-          table: 'bps',
-          json: true,
-          limit: 1000 
-      }
-      let account_info = await Codex(node_config).getTableRows(params);
-      console.log(account_info)
-    }
-    test_get_bps_table();
+  }
+  let account_info = await Codex(node_config).getTableRows(params);
+  console.log(account_info)
+}
+test_get_bps_table();
 ```
 
 ## 获取出块节点
 
 使用示例:
+```javascript
+const test_get_block_productor = async () => {
+  let codex_token = await Codex(node_config);
+  let node_info = await codex_token.getInfo({});
 
-    const test_get_block_productor = async () => {
-      let codex_token = await Codex(node_config);
-      let node_info = await codex_token.getInfo({});
-    
-      let head_block_num = node_info.head_block_num; //节点最新区块编号
-      let head_block_info = codex_token.getBlock(head_block_num); //最新区块详细信息
-      let schedule_version = head_block_info.schedule_version; //区块所在届
-      //查询当届出块节点表数据
-      let 参数 = {
-          scope: 'codex',
-          code: 'codex',
-          table: 'schedules',
-          table_key: '0',
-          json: 'true',
-          limit: 1000,
-      }
-      let supber_bps = await Codex(node_config).getTableRows(参数);
-      console.log(supber_bps)
-    }
-    test_get_block_productor();
-    
+  let head_block_num = node_info.head_block_num; //节点最新区块编号
+  let head_block_info = codex_token.getBlock(head_block_num); //最新区块详细信息
+  let schedule_version = head_block_info.schedule_version; //区块所在届
+  //查询当届出块节点表数据
+  let 参数 = {
+      scope: 'codex',
+      code: 'codex',
+      table: 'schedules',
+      table_key: '0',
+      json: 'true',
+      limit: 1000,
+  }
+  let supber_bps = await Codex(node_config).getTableRows(参数);
+  console.log(supber_bps)
+}
+
+test_get_block_productor();
+```
 
 
 # 抵押
@@ -212,21 +212,22 @@
 函数: freeze
 
 参数:
-
+```javascript
     voer: 抵押给哪个账户
     stake: 抵押数量
+```
 
 
 使用示例:
 ```javascript
-    const test_freeze = async (your_private_key, voter, freeze_ammount) => {
-      let private_config = Object.assign({keyProvider: your_private_key}, node_config);
-      let codex_token = await Codex(private_config).contract('codex');
-      let res = await codex_token.freeze(voter, freeze_ammount);
-      console.log(res);
-    }
-    
-    test_freeze( keyProvider,'testc', '11112.0000 CDX')
+const test_freeze = async (your_private_key, voter, freeze_ammount) => {
+  let private_config = Object.assign({keyProvider: your_private_key}, node_config);
+  let codex_token = await Codex(private_config).contract('codex');
+  let res = await codex_token.freeze(voter, freeze_ammount);
+  console.log(res);
+}
+
+test_freeze( keyProvider,'testc', '11112.0000 CDX')
 ```
 
 
@@ -240,19 +241,22 @@
 
 参数:
 
+```javascript
     voter: 为哪个账户投票
     bpname: 所投节点的名称
     stake: 投票数量
+```
 
 使用示例:
 
 ```javascript
-    Codex({keyProvider, httpEndpoint, chainId})
-    .contract('codex')
-    .then(async token => {
-        let res = await token.vote(voter, bpname, stake);
-        console.log(res);
-    })
+// keyProvider 为私钥
+const test_vote = async (voter, bpname, stake) => {
+  let token = await Codex({keyProvider, httpEndpoint, chainId}).contract('codex');
+  let res = await token.vote(voter, bpname, stake);
+  console.log(res);
+}
+test_vote(voter, bpname, stake);
 ```
 
 # 内存租赁
@@ -267,18 +271,18 @@
 ```js
     voter: 租赁账户
     bpname: 节点名称
-    stake: 投票数量
+    stake: 投票数量(如 '10.0000 CDX')
 ```
 
 使用示例:
 
 ```js
-    Codex({keyProvider, httpEndpoint, chainId})
-    .contract('codex')
-    .then(async token => {
-        let data = await token.vote4ram(voter, bpname, stake);
-        console.log(data);
-    })
+const test_vote4ram = async (voter, bpname, stake) => {
+  let token = await Codex({keyProvider, httpEndpoint, chainId}).contract('codex');
+  let data = await token.vote4ram(voter, bpname, stake);
+  console.log(data);
+}
+test_vote4ram(voter, bpname, stake);
 ```
 
 # 转账
@@ -288,46 +292,51 @@
 函数: transfer
 
 参数: 
-
+```js
     from: 转出账户
     to: 转入账户
     quantity: 转账数量
     memo: 转账备注信息，非必填，没有使用空字符串
-
+```
 使用示例:
 
 ```javascript
-    Codex({keyProvider, httpEndpoint, chainId})
-    .contract('codex.token')
-    .then(async token => {
-        let res = await token.transfer(from, to, quantity, memo);
-        console.log(res);
-    })
+const test_transfer = async (from, to, quantity = '0.0000 CDX', memo = '') => {
+  let token = await Codex({keyProvider, httpEndpoint, chainId}).contract('codex.token');
+  let res = await token.transfer(from, to, quantity, memo);
+  console.log(res);
+}
+test_transfer(from_name, to_name, quantity, memo);
 ```
 # 领取投票分红
 
 合约账户: codex
 
 参数:
-
+```js
     bpname: 从哪个节点领取分红
     receiver: 领取分红分配到哪个账户
+```
+::: 注意
+领取投票分红必须在同一个块opencast
+:::
 
 使用示例:
+
 ```javascript
-    const test_claim_vote_share = async (your_private_key, voter, bpname) => {
-      let private_config = Object.assign({keyProvider: your_private_key}, node_config);
-      let codex_token = await Codex(private_config);
-    
-      // 领取分红前，需要调用 opencast 打开铸币池
-      await codex_token.transaction(['codex', 'codex.token'], contracts => {
-          contracts.codex_token.opencast(voter);
-          contracts.codex.claimvote(bpname, voter, {'actor': voter, 'permission': 'active'}); 
-        })
-    
-    }
-    
-    test_claim_vote_share(keyProvider, your_account_name, the_block_node_you_voted);
+const test_claim_vote_share = async (your_private_key, voter, bpname) => {
+  let private_config = Object.assign({keyProvider: your_private_key}, node_config);
+  let codex_token = await Codex(private_config);
+
+  // 领取分红前，需要调用 opencast 打开铸币池
+  await codex_token.transaction(['codex', 'codex.token'], contracts => {
+    contracts.codex_token.opencast(voter);
+    contracts.codex.claimvote(bpname, voter, {'actor': voter, 'permission': 'active'}); 
+  });
+
+}
+
+test_claim_vote_share(keyProvider, your_account_name, the_block_node_you_voted);
 ```
 
 # 领取挖矿分红
@@ -338,6 +347,11 @@
 
     chain: 代币所在链的名称
     quantity:  领取分红数量, 当前数量没有作用，主要识别代币符号, 可填 “0.0000 token_symbol”receiver: 领取分红的人
+
+
+::: 注意
+领取挖矿分红必须在同一个块opencast
+:::
 
 使用示例:
 ```javascript
