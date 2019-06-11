@@ -14,11 +14,13 @@ import Codex from 'cdxjs'
 # 全局配置
 
 参数:
-
+```javascript
     httpEndpoint: 节点rpc接口
     chainId: 节点chainId 可以通过 get_info 获取
+```
 
 使用示例:
+
 ```javascript
 const node_config = {
   httpEndpoint: node_url,
@@ -30,10 +32,12 @@ const node_config = {
 通过合约账户获取ABI, ABI包含当前合约的所有可执行函数和函数需要的配置
 
 参数:
-
+```javascript
     contranct_name: 合约账户
+```
 
 使用示例:
+
 ```javascript
 const test_get_abi = async () => {
   let abi_content = await Codex({httpEndpoint}).getAbi('codex');
@@ -183,7 +187,7 @@ const test_get_block_productor = async () => {
   let node_info = await codex_token.getInfo({});
 
   let head_block_num = node_info.head_block_num; //节点最新区块编号
-  let head_block_info = codex_token.getBlock(head_block_num); //最新区块详细信息
+  let head_block_info = await codex_token.getBlock(head_block_num); //最新区块详细信息
   let schedule_version = head_block_info.schedule_version; //区块所在届
   //查询当届出块节点表数据
   let 参数 = {
@@ -355,20 +359,19 @@ test_claim_vote_share(keyProvider, your_account_name, the_block_node_you_voted);
 
 使用示例:
 ```javascript
-    const test_claim_token_share = async (your_private_key, chain, quantity = '0.0000 ADD', receiver) => {
-      let private_config = Object.assign({keyProvider: your_private_key}, node_config);
-      let codex_token = await Codex(private_config);
-    
-      // 领取分红前，需要调用 opencast 打开铸币池
-      await codex_token.transaction(['relay.token', 'codex.token'], contracts => {
-          contracts.codex_token.opencast(receiver);
-          contracts.relay_token.claim( chain, quantity, receiver, {'actor': receiver, 'permission': 'active'});
-      })
-    
-    }
-    
-    test_claim_token_share(keyProvider, 'eosforce', '0.0000 ADD', 'testc');
+const test_claim_token_share = async (your_private_key, chain, quantity = '0.0000 ADD', receiver) => {
+  let private_config = Object.assign({keyProvider: your_private_key}, node_config);
+  let codex_token = await Codex(private_config);
 
+  // 领取分红前，需要调用 opencast 打开铸币池
+  await codex_token.transaction(['relay.token', 'codex.token'], contracts => {
+      contracts.codex_token.opencast(receiver);
+      contracts.relay_token.claim( chain, quantity, receiver, {'actor': receiver, 'permission': 'active'});
+  })
+
+}
+
+test_claim_token_share(keyProvider, 'eosforce', '0.0000 ADD', 'testc');
 ```
 # 跨链充值
 
@@ -408,6 +411,28 @@ test_claim_vote_share(keyProvider, your_account_name, the_block_node_you_voted);
 
 # 计算投票分红
 
+# 创建用户
+
+合约账户:codex
+
+函数: newaccount
+
+参数: 
+
+    creator: 创建者
+    new_name: 被创建用户名
+    active_public_key: active 权限所在 public key
+    owner_public_key: owner 权限所在 public key
+
+使用示例:
+
+```javascript
+const test_create_account = async (creator, name, public_key, public_key) => {
+    let token = await Codex({keyProvider, httpEndpoint, chainId}).contract('codex');
+    await token.newaccount(creator, name, public_key, public_key);
+}
+test_create_account(creator, name, public_key, public_key);
+```
 
 # 更改账户权限
 
@@ -421,6 +446,7 @@ test_claim_vote_share(keyProvider, your_account_name, the_block_node_you_voted);
     public_key: 将账户下的权限转移到当前公钥
 
 使用示例:
+
 ```javascript
     Codex({keyProvider, httpEndpoint, chainId}).transaction(contract_account, tr => {
         tr.updateauth(name, 'active', 'owner', active_public_key, auth); //修改active 权限公钥
@@ -459,6 +485,8 @@ test_claim_vote_share(keyProvider, your_account_name, the_block_node_you_voted);
     action_name: data所在action的合约方法
 ```
 
+使用示例:
+
 ```js
 const abi_bin_to_json = async (data, contract_name, action_name) => {
   let token = await Eos(node_config).contract(contract_name);
@@ -477,6 +505,8 @@ const abi_bin_to_json = async (data, contract_name, action_name) => {
 ```
 
 # 私钥生成
+
+使用示例:
 ```javascript
     const { ecc, Fcbuffer } = Codex.modules;
     const randomKey = async () => {
@@ -489,6 +519,8 @@ const abi_bin_to_json = async (data, contract_name, action_name) => {
 
 
 # 公钥获取
+
+使用示例:
 ```javascript
     const privateToPublic = (private_key, symbol = 'EOS') => {
         let public_key = ecc.privateToPublic(private_key);
