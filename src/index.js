@@ -11,6 +11,17 @@ const format = require('./format')
 const schema = require('./schema')
 const pkg = require('../package.json')
 
+/*
+
+*/
+
+const privateToPublic = ecc.privateToPublic;
+
+ecc.privateToPublic = (private_key) => {
+  let public_key = privateToPublic(private_key);
+  return public_key.replace(/^EOS/, 'CDX')
+}
+
 const Eos = (config = {}) => {
   config = Object.assign({}, {
     httpEndpoint: 'http://127.0.0.1:8888',

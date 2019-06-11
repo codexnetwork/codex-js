@@ -1,6 +1,6 @@
 {
   "name": "cdxjs",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "General purpose library for the CODEX blockchain.",
   "main": "lib/index.js",
   "scripts": {

@@ -254,6 +254,33 @@
         console.log(res);
     })
 ```
+
+# 内存租赁
+
+投票给出块节点，将增加内存
+
+合约账户: codex
+
+函数: vote4ram
+
+参数:
+```js
+    voter: 租赁账户
+    bpname: 节点名称
+    stake: 投票数量
+```
+
+使用示例:
+
+```js
+    Codex({keyProvider, httpEndpoint, chainId})
+    .contract('codex')
+    .then(async token => {
+        let data = await token.vote4ram(voter, bpname, stake);
+        console.log(data);
+    })
+```
+
 # 转账
 
 合约账户: codex.token
@@ -332,7 +359,7 @@
 # 跨链充值
 
 
-## 跨链提现
+# 跨链提现
 
 
 # 跨链资产转账
@@ -399,7 +426,7 @@
 
 使用示例:
 ```javascript
-    Codex({}).getActions({
+    Codex({httpEndpoint}).getActions({
           account_name: accountName, 
           pos: pos, 
           offset: offset
@@ -407,6 +434,32 @@
     .then(data => {
       console.log(data);
     });
+```
+
+# 解析交易记录中的data数据
+
+参数:
+```js
+    data: 交易记录中action中的data字段，类似 "0000000a5dba3055000000c0d483a93ba0860100000000000443445800000000" 这类结构
+    contract_name: data所在action的合约账户
+    action_name: data所在action的合约方法
+```
+
+```js
+const abi_bin_to_json = async (data, contract_name, action_name) => {
+  let token = await Eos(node_config).contract(contract_name);
+  let struct = token.fc.structs;
+
+  let buf, buf_res;
+  try{
+      buf = Buffer.from(data, 'hex');
+      buf_res = Fcbuffer.fromBuffer(struct[action_name], buf)
+      console.log(buf_res);
+  }catch(e){
+    throw e;
+  }
+  return buf_res;
+}
 ```
 
 # 私钥生成
@@ -425,8 +478,9 @@
 ```javascript
     const privateToPublic = (private_key, symbol = 'EOS') => {
         let public_key = ecc.privateToPublic(private_key);
-        return public_key.replace(/^EOS/, symbol);
+        return public_key;
     }
+    privateToPublic();
 ```
 
 
