@@ -489,7 +489,7 @@ test_create_account(creator, name, public_key, public_key);
 
 ```js
 const abi_bin_to_json = async (data, contract_name, action_name) => {
-  let token = await Eos(node_config).contract(contract_name);
+  let token = await Codex(node_config).contract(contract_name);
   let struct = token.fc.structs;
 
   let buf, buf_res;
@@ -522,7 +522,7 @@ const abi_bin_to_json = async (data, contract_name, action_name) => {
 
 使用示例:
 ```javascript
-    const privateToPublic = (private_key, symbol = 'EOS') => {
+    const privateToPublic = (private_key) => {
         let public_key = ecc.privateToPublic(private_key);
         return public_key;
     }
