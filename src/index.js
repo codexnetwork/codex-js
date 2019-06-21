@@ -17,9 +17,9 @@ const pkg = require('../package.json')
 
 const privateToPublic = ecc.privateToPublic;
 
-ecc.privateToPublic = (private_key) => {
+ecc.privateToPublic = (private_key, with_CDX = true) => {
   let public_key = privateToPublic(private_key);
-  return public_key.replace(/^EOS/, 'CDX')
+  return public_key.replace(/^EOS/, with_CDX ? 'CDX' : '')
 }
 
 const Eos = (config = {}) => {
@@ -207,9 +207,9 @@ const defaultSignProvider = (eos, config) => async function({sign, buf, transact
     const isPublic = key.public != null
 
     if(isPrivate) {
-      keyMap.set(ecc.privateToPublic(key.private), key.private)
+      keyMap.set(ecc.privateToPublic(key.private, false), key.private)
     } else {
-      keyMap.set(key.public, null)
+      keyMap.set(key.public.replace('EOS', '').replace('CDX', ''), null)
     }
   }
 

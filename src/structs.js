@@ -426,6 +426,7 @@ const SignatureType = (validation, baseTypes) => {
 const authorityOverride = ({
   /** shorthand `EOS6MRyAj..` */
   'authority.fromObject': (value) => {
+    value = value.replace ? value.replace('CDX', '').replace('EOS', '') : value;
     if(PublicKey.fromString(value)) {
       return {
         threshold: 1,
