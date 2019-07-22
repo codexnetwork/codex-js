@@ -1,42 +1,44 @@
-# codex API
+## codex API
 
-# 安装 cdxjs
+### Install
 ```javascript
 npm install cdxjs
     //or
 yarn add cdxjs
 ```
-# 使用
+### Usage
 ```javascript
 import Codex from 'cdxjs'
 ```
 ## 
-# 全局配置
+### Config
 
-参数:
-```javascript
-    httpEndpoint: 节点rpc接口
-    chainId: 节点chainId 可以通过 get_info 获取
-```
+parameters:
 
-使用示例:
+- httpEndPoint [string] codex chain rpc base host
+- chainId [string] the id of codex chain, you can get by [get_info](#get_info)
+- keyProvider
+
+Example:
 
 ```javascript
 const node_config = {
   httpEndpoint: node_url,
-  chainId
+  chainId,
+  keyProvider
 }
 ```
-# getAbi
 
-通过合约账户获取ABI, ABI包含当前合约的所有可执行函数和函数需要的配置
+### getAbi
 
-参数:
-```javascript
-    contranct_name: 合约账户
-```
+ABI instruction all the methods that in contract.
 
-使用示例:
+parameters:
+
+- contract_name [string] 
+
+
+Example:
 
 ```javascript
 const test_get_abi = async () => {
@@ -45,35 +47,34 @@ const test_get_abi = async () => {
 }
 test_get_abi();
 ```
-# getInfo
+### getInfo
 
-获取节点最新信息
+get the chain info
 
-参数:
+parameters:
 
-```javascript
-  {}
-```
+- empty_dict [Object] the empy object is neccessary.
 
-使用示例:
+
+Example:
 
 ```javascript
 const test_get_info = async () => {
-  let info = await Codex(node_config).getInfo({}); //api getInfo, {}为必传参数
+  let info = await Codex(node_config).getInfo({}); //api getInfo, `{}` is required
   console.log(`node info is ${JSON.stringify(info)}`);
 }
 test_get_info();
 ```
 
-# getBblock
+### getBblock
 
-根据区块号或区块id获取区块详细信息
+get block info with block num or block id
 
 参数:
 
-    block_num_or_id
+- block_num_or_id [string]
 
-使用示例:
+Example:
 
 ```javascript
     const test_get_block = async (block_num_or_id = 10) => {
@@ -86,13 +87,13 @@ test_get_info();
 
 # getAccount  
 
-获取内存，网络，CPU,权限等账户信息
+cpu, net, ram, public key can be goted by this api
 
-参数:
+parameters:
 
-    account_name
+- account_name [string]
 
-使用示例:
+Example:
 
 ```javascript
 const test_get_account = async (account_name = 'codex') => {
@@ -103,41 +104,41 @@ test_get_account();
 ```
 
 
-# getTableRows
+### getTableRows
 
-合约账户下表查询
-
-参数:
-
-    code: 合约账户名
-    table: 合约账户下的表名
-    scope: 查询条件
-    limit: 查询最大长度
-
-
-## 查询用户资产表
+query contract table
 
 参数:
+
+- code [string] the account of contract
+- table [string] table name
+- scope [string] query condition
+- limit [number] the max rows you want
+
+
+### query an account's token
+
+parameters:
 
 ```javascript
   { 
-    scope: account_name, //查询条件
-    code: 'codex.token', //合约账户
-    table: 'accounts', //表名
+    scope: account_name, // the account you want query
+    code: 'codex.token', 
+    table: 'accounts', 
     limit: 10000,
     json: true,
   }
 ```
 
 
-代码:
+Example:
 
 ```javascript
 const test_get_available = async (account_name = 'testc') => {
   let params = { 
-    scope: account_name, //查询条件
-    code: 'codex.token', //合约账户
-    table: 'accounts', //表名
+    scope: account_name,
+    code: 'codex.token',
+    table: 'accounts', 
     limit: 10000,
     json: true,
   }
@@ -148,9 +149,9 @@ test_get_available();
 ```
 
 
-## 查询所有超级节点
+### query blcok producers
 
-参数:
+parammeters:
 
 ```javascript
   {
@@ -162,7 +163,8 @@ test_get_available();
   }
 ```
 
-使用:
+Example:
+
 ```javascript
 const test_get_bps_table = async (account_name = 'testc') => {
   let params = {
@@ -178,18 +180,17 @@ const test_get_bps_table = async (account_name = 'testc') => {
 test_get_bps_table();
 ```
 
-## 获取出块节点
+### query the producers which pack block data
 
-使用示例:
+Example:
 ```javascript
 const test_get_block_productor = async () => {
   let codex_token = await Codex(node_config);
   let node_info = await codex_token.getInfo({});
 
-  let head_block_num = node_info.head_block_num; //节点最新区块编号
-  let head_block_info = await codex_token.getBlock(head_block_num); //最新区块详细信息
-  let schedule_version = head_block_info.schedule_version; //区块所在届
-  //查询当届出块节点表数据
+  let head_block_num = node_info.head_block_num; //block_num_or_id
+  let head_block_info = await codex_token.getBlock(head_block_num); //the latest block info
+  let schedule_version = head_block_info.schedule_version; //the version 
   let 参数 = {
       scope: 'codex',
       code: 'codex',
